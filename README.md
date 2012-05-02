@@ -1,4 +1,4 @@
 fyborg
 ======
 
-The ultimate processing framework for TrackVis (.trk) files.
+The ultimate scalar mapping framework for TrackVis (.trk) files.
