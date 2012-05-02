@@ -1,28 +1,43 @@
+from FyAction import FyAction
 from FyMapAction import FyMapAction
+import numpy
 
 class FyLabelMappingWithRadiusAction( FyMapAction ):
 
-  def __init__( self, scalarName, volume ):
+  def __init__( self, scalarName, volume, neighbors=0 ):
     super( FyLabelMappingWithRadiusAction, self ).__init__( scalarName, volume )
 
     self.__startLabels = {}
     self.__endLabels = {}
+    self.__neighbors = neighbors
 
   def scalarPerFiber( self, uniqueFiberId, coords, scalars ):
     '''
     '''
+    # image dimensions
+    n1, n2, n3 = self.__imageDimensions
+
     # grab first and last coord
-    firstCoord = coords[0]
-    lastCoord = coords[-1]
+    first = coords[0]
+    last = coords[-1]
 
-    # do neighbor search
+    labels = []
 
-    # store the label values
-    startLabel = super( FyLabelMappingWithRadiusAction, self ).scalarPerCoordinate( uniqueFiberId, firstCoord[0], firstCoord[1], firstCoord[2] )
-    endLabel = super( FyLabelMappingWithRadiusAction, self ).scalarPerCoordinate( uniqueFiberId, lastCoord[0], lastCoord[1], lastCoord[2] )
+    for currentCoords in [first, last]:
+      # do neighbor search
 
-    self.__startLabels[uniqueFiberId] = [[firstCoord[0], firstCoord[1], firstCoord[2]], startLabel]
-    self.__endLabels[uniqueFiberId] = [[lastCoord[0], lastCoord[1], lastCoord[2]], endLabel]
+      # convert to ijk
+      ijkCoords = [x / y for x, y in zip( currentCoords, self.__imageSpacing )]
+      a, b, c = [max( 1, x ) for x in ijkCoords]
+      # create 3d sphere mask (from http://stackoverflow.com/questions/8647024/how-to-apply-a-disc-shaped-mask-to-a-numpy-array)
+      x, y, z = numpy.ogrid[-a:n1 - a, -b:n2 - b, -c:n3 - c]
+      mask = x * x + y * y + z * z <= r * r # 3d sphere mask
+      histogram = numpy.histogram( self.__image[mask] )
+      mostFrequentLabel = histogram[1][numpy.argmax( histogram[0] )]
+      labels.append( mostFrequentLabel )
+
+    self.__startLabels[uniqueFiberId] = [[first[0], first[1], first[2]], labels[0]]
+    self.__endLabels[uniqueFiberId] = [[last[0], last[1], last[2]], labels[1]]
 
     return FyAction.NoScalar
 

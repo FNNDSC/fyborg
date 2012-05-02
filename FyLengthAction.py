@@ -1,4 +1,5 @@
 from FyAction import FyAction
+import numpy
 
 class FyLengthAction( FyAction ):
 

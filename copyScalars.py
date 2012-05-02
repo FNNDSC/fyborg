@@ -1,3 +1,7 @@
+from _common import FNNDSCFileIO as io
+from _common import FNNDSCConsole as c
+
+import numpy
 
 def copyScalars( trkFile1, trkFile2, outputFile ):
   '''
