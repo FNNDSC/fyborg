@@ -9,7 +9,6 @@ def printTrkInfo( header, fileName ):
   scalarNames = header['scalar_name']
   numberOfProperties = header['n_properties']
   propertyNames = header['property_name']
-  vox2rasMatrix = header['vox_to_ras']
   voxelOrder = header['voxel_order']
   pad1 = header['pad1']
   pad2 = header['pad2']
@@ -36,6 +35,7 @@ def printTrkInfo( header, fileName ):
 
   if version == 2:
     # only in trackvis v2
+    vox2rasMatrix = header['vox_to_ras']
     c.info( '  VOX2RAS Matrix:' )
     c.info( '    ' + str( vox2rasMatrix[0] ) )
     c.info( '    ' + str( vox2rasMatrix[1] ) )
