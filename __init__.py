@@ -1,6 +1,5 @@
 from fyborg import *
 from trkinfo import *
-from identityXFM import *
 from copyScalars import *
 from FyAction import *
 from FyFilterCortexAction import *
