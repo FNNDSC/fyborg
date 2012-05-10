@@ -1,6 +1,7 @@
 from fyborg import *
 from trkinfo import *
 from copyScalars import *
+from clearScalars import *
 from makeMatrix import *
 from FyAction import *
 from FyFilterCortexAction import *
