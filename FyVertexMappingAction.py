@@ -7,7 +7,7 @@ from _common import pysurfer_io as sio
 class FyVertexMappingAction( FyMapAction ):
 
   def __init__( self, scalarName, volume, leftMesh, rightMesh ):
-    super( FyLabelMappingWithRadiusAction, self ).__init__( scalarName, volume )
+    super( FyVertexMappingAction, self ).__init__( scalarName, volume )
 
     self._leftMesh = sio.read_geometry( leftMesh )
     self._rightMesh = sio.read_geometry( rightMesh )
