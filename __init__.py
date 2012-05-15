@@ -9,3 +9,4 @@ from FyFilterLengthAction import *
 from FyLabelMappingWithRadiusAction import *
 from FyLengthAction import *
 from FyMapAction import *
+from FyVertexMappingAction import *
