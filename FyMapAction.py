@@ -1,7 +1,7 @@
 from FyAction import FyAction
 from _common import FNNDSCFileIO as io
 
-def sampleBetween(point1, point2, values):
+def sampleBetween( point1, point2, values ):
     """
 
     """
@@ -10,17 +10,17 @@ def sampleBetween(point1, point2, values):
     print point1
     print point2
 
-    middlePoint = [int(point1[0] + (point2[0] - point1[0]) / 2), int(point1[1] + (point2[1] - point1[1]) / 2),
-                   int(point1[2] + (point2[2] - point1[2]) / 2)]
+    middlePoint = [int( point1[0] + ( point2[0] - point1[0] ) / 2 ), int( point1[1] + ( point2[1] - point1[1] ) / 2 ),
+                   int( point1[2] + ( point2[2] - point1[2] ) / 2 )]
 
     threshold = 1
-    if abs(middlePoint[0] - point1[0]) > threshold or abs(middlePoint[1] - point1[1]) > threshold or abs(middlePoint[2] - point1[2]) > threshold:
-        sampleBetween(point1, middlePoint, values)
+    if abs( middlePoint[0] - point1[0] ) > threshold or abs( middlePoint[1] - point1[1] ) > threshold or abs( middlePoint[2] - point1[2] ) > threshold:
+        sampleBetween( point1, middlePoint, values )
 
-    if abs(middlePoint[0] - point2[0]) > threshold or abs(middlePoint[1] - point2[1]) > threshold or abs(middlePoint[2] - point2[2]) > threshold:
-        sampleBetween(middlePoint, point2, values)
+    if abs( middlePoint[0] - point2[0] ) > threshold or abs( middlePoint[1] - point2[1] ) > threshold or abs( middlePoint[2] - point2[2] ) > threshold:
+        sampleBetween( middlePoint, point2, values )
 
-    values.append(middlePoint)
+    values.append( middlePoint )
 
 class FyMapAction( FyAction ):
 
@@ -50,8 +50,8 @@ class FyMapAction( FyAction ):
 
     for currentCoords in coords:
         # convert to ijk
-        ijkCoords = [int(a / b) for a, b in zip( currentCoords, self._imageSpacing )]
-        self._ijkcoordinates[uniqueFiberId].append(ijkCoords)
+        ijkCoords = [ int( a / b ) for a, b in zip( currentCoords, self._imageSpacing ) ]
+        self._ijkcoordinates[uniqueFiberId].append( ijkCoords )
 
 
     print self._ijkcoordinates[uniqueFiberId]
@@ -62,32 +62,25 @@ class FyMapAction( FyAction ):
     """
     """
 
-    ijkCoords = [int(a / b) for a, b in zip( [x, y, z], self._imageSpacing )]
+    current = [int( a / b ) for a, b in zip( [x, y, z], self._imageSpacing )]
 
     i = 0
     # find the index of the coordinate in the list
-    for i in range(len(self._ijkcoordinates[uniqueFiberId])):
-        if self._ijkcoordinates[uniqueFiberId][i][0] == ijkCoords[0] and self._ijkcoordinates[uniqueFiberId][i][1] == ijkCoords[1] and self._ijkcoordinates[uniqueFiberId][i][2] == ijkCoords[2]:
+    for i in range( len( self._ijkcoordinates[uniqueFiberId] ) ):
+        if self._ijkcoordinates[uniqueFiberId][i][0] == current[0] and self._ijkcoordinates[uniqueFiberId][i][1] == current[1] and self._ijkcoordinates[uniqueFiberId][i][2] == current[2]:
             break
+    index = i
 
-    #init upper/lower thresholds
-    lower = upper = self._ijkcoordinates[uniqueFiberId][i]
+    prevIndex = max( index - 1, 0 )
+    nextIndex = min( index + 1, len( self._ijkcoordinates ) - 1 )
 
-    # set lower threshold
-    if i>0:
-        lower[0] = int(self._ijkcoordinates[uniqueFiberId][i-1][0]+ (self._ijkcoordinates[uniqueFiberId][i][0] - self._ijkcoordinates[uniqueFiberId][i-1][0])/2)
-        lower[1] = int(self._ijkcoordinates[uniqueFiberId][i-1][1]+ (self._ijkcoordinates[uniqueFiberId][i][1] - self._ijkcoordinates[uniqueFiberId][i-1][1])/2)
-        lower[2] = int(self._ijkcoordinates[uniqueFiberId][i-1][2]+ (self._ijkcoordinates[uniqueFiberId][i][2] - self._ijkcoordinates[uniqueFiberId][i-1][2])/2)
-
-    # set upper threshold
-    if(i+1)<len(self._ijkcoordinates[uniqueFiberId]):
-        upper[0] = int(self._ijkcoordinates[uniqueFiberId][i][0]+ (self._ijkcoordinates[uniqueFiberId][i+1][0] - self._ijkcoordinates[uniqueFiberId][i][0])/2)
-        upper[1] = int(self._ijkcoordinates[uniqueFiberId][i][1]+ (self._ijkcoordinates[uniqueFiberId][i+1][1] - self._ijkcoordinates[uniqueFiberId][i][1])/2)
-        upper[2] = int(self._ijkcoordinates[uniqueFiberId][i][2]+ (self._ijkcoordinates[uniqueFiberId][i+1][2] - self._ijkcoordinates[uniqueFiberId][i][2])/2)
+    lower = self._ijkcoordinates[uniqueFiberId][prevIndex]
+    upper = self._ijkcoordinates[uniqueFiberId][nextIndex]
 
     values = []
     # list points
-    sampleBetween(lower, upper, values)
+    sampleBetween( lower, current, values )
+    sampleBetween( current, upper, values )
 
     print 'values:'
     print values
@@ -97,13 +90,13 @@ class FyMapAction( FyAction ):
     for element in values[:]:
         value += self._image[int( element[0] ), int( element[1] ), int( element[2] )]
 
-    value /= len(values)
+    value /= len( values )
 
     print 'value: '
     print value
     print '==============='
     # return the interpolated value
-    self._value.append(value)
+    self._value.append( value )
 
     return value
 
@@ -115,7 +108,7 @@ class FyMapAction( FyAction ):
       for element in self._value[:]:
         value += element
 
-      value /= len(self._value)
+      value /= len( self._value )
 
 
       print 'MEAN VALUE'
