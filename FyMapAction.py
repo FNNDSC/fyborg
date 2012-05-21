@@ -10,10 +10,8 @@ def sampleBetween(point1, point2, values):
     print point1
     print point2
 
-    middlePoint = [];
-    middlePoint.append(int(point1[0] + (point2[0] - point1[0])/2))
-    middlePoint.append(int(point1[1] + (point2[1] - point1[1])/2))
-    middlePoint.append(int(point1[2] + (point2[2] - point1[2])/2))
+    middlePoint = [int(point1[0] + (point2[0] - point1[0]) / 2), int(point1[1] + (point2[1] - point1[1]) / 2),
+                   int(point1[2] + (point2[2] - point1[2]) / 2)]
 
     threshold = 1
     if abs(middlePoint[0] - point1[0]) > threshold or abs(middlePoint[1] - point1[1]) > threshold or abs(middlePoint[2] - point1[2]) > threshold:
@@ -27,8 +25,8 @@ def sampleBetween(point1, point2, values):
 class FyMapAction( FyAction ):
 
   def __init__( self, scalarName, volume ):
-    '''
-    '''
+    """
+    """
     super( FyMapAction, self ).__init__( scalarName )
 
     # load volume
@@ -44,8 +42,8 @@ class FyMapAction( FyAction ):
 #    self._previous = {}
 
   def scalarPerFiber( self, uniqueFiberId, coords, scalars ):
-    '''
-    '''
+    """
+    """
 
     # initiate the list
     self._ijkcoordinates[uniqueFiberId] = []
@@ -61,8 +59,8 @@ class FyMapAction( FyAction ):
     return FyAction.NoScalar
 
   def scalarPerCoordinate( self, uniqueFiberId, x, y, z ):
-    '''
-    '''
+    """
+    """
 
     ijkCoords = [int(a / b) for a, b in zip( [x, y, z], self._imageSpacing )]
 
@@ -76,7 +74,7 @@ class FyMapAction( FyAction ):
     lower = upper = self._ijkcoordinates[uniqueFiberId][i]
 
     # set lower threshold
-    if(i>0):
+    if i>0:
         lower[0] = int(self._ijkcoordinates[uniqueFiberId][i-1][0]+ (self._ijkcoordinates[uniqueFiberId][i][0] - self._ijkcoordinates[uniqueFiberId][i-1][0])/2)
         lower[1] = int(self._ijkcoordinates[uniqueFiberId][i-1][1]+ (self._ijkcoordinates[uniqueFiberId][i][1] - self._ijkcoordinates[uniqueFiberId][i-1][1])/2)
         lower[2] = int(self._ijkcoordinates[uniqueFiberId][i-1][2]+ (self._ijkcoordinates[uniqueFiberId][i][2] - self._ijkcoordinates[uniqueFiberId][i-1][2])/2)
@@ -110,8 +108,8 @@ class FyMapAction( FyAction ):
     return value
 
   def validate( self, uniqueFiberId ):
-      '''
-      '''
+      """
+      """
       value = 0
 
       for element in self._value[:]:
