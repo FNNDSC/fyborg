@@ -70,7 +70,8 @@ def fyborg( trkFile, outputTrkFile, actions, *args ):
   #
   # THREADED COMPONENT
   #
-  numberOfThreads = multiprocessing.cpu_count()
+#  numberOfThreads = multiprocessing.cpu_count()
+  numberOfThreads = 1
   c.info( 'Splitting master into ' + str( numberOfThreads ) + ' pieces..' )
   splittedOutputTracks = u.split_list( tracks[:], numberOfThreads )
 
