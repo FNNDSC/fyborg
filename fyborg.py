@@ -134,6 +134,19 @@ def fyborg( trkFile, outputTrkFile, actions, *args ):
   c.info( "Merging done!" )
 
   # save the whole thing
+  print tracksHeader
+  print outputTracks[0][1]
+
+
+  value = 0
+  for element in outputTracks[0][1][:]:
+      value += element
+
+  value /= len(outputTracks[0][1])
+
+  print 'NEW'
+  print value
+
   io.saveTrk( outputTrkFile, outputTracks, tracksHeader, None, True )
 
   c.info( "All done!" )

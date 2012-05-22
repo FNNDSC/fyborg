@@ -7,6 +7,7 @@ class FyLengthAction( FyAction ):
     '''
     '''
     super( FyLengthAction, self ).__init__( 'length' )
+    self._length = 0
 
   def scalarPerFiber( self, uniqueFiberId, coords, scalars ):
     '''
@@ -20,5 +21,13 @@ class FyLengthAction( FyAction ):
 
       _last = _current
 
+    self._length += length
     return length
 
+  def validate( self, uniqueFiberId ):
+      """
+      """
+      print 'calculated length'
+      print self._length
+
+      return True

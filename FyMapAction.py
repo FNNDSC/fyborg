@@ -1,26 +1,38 @@
 from FyAction import FyAction
 from _common import FNNDSCFileIO as io
 
+from math import sqrt
+import numpy
+
 def sampleBetween( point1, point2, values ):
     """
 
     """
+    if abs( point2[0] - point1[0] ) > 1 or abs( point2[1] - point1[1] ) > 1 or abs( point2[2] - point1[2] ) > 1:
+        middlePoint = [ round(point1[0] + ( point2[0] - point1[0] ) / 2, 6) , round(point1[1] + ( point2[1] - point1[1]) / 2, 6) ,
+                    round(point1[2] + ( point2[2] - point1[2] ) / 2, 6) ]
 
-    print 'sampleBetween'
-    print point1
-    print point2
-
-    middlePoint = [int( point1[0] + ( point2[0] - point1[0] ) / 2 ), int( point1[1] + ( point2[1] - point1[1] ) / 2 ),
-                   int( point1[2] + ( point2[2] - point1[2] ) / 2 )]
-
-    threshold = 1
-    if abs( middlePoint[0] - point1[0] ) > threshold or abs( middlePoint[1] - point1[1] ) > threshold or abs( middlePoint[2] - point1[2] ) > threshold:
         sampleBetween( point1, middlePoint, values )
-
-    if abs( middlePoint[0] - point2[0] ) > threshold or abs( middlePoint[1] - point2[1] ) > threshold or abs( middlePoint[2] - point2[2] ) > threshold:
         sampleBetween( middlePoint, point2, values )
 
-    values.append( middlePoint )
+        values.append( middlePoint )
+
+    # if point2 not already in list, append
+    ok2 = True
+    ok1 = True
+    for toto in values[:]:
+        if toto[0] == point2[0] and toto[1] == point2[1] and toto[2] == point2[2]:
+            ok2 = False
+#    for toto in values[:]:
+#        if toto[0] == point1[0] and toto[1] == point1[1] and toto[2] == point1[2]:
+#            ok1 = False
+
+    if ok2:
+        values.append( point2 )
+#    if ok1:
+#        values.append( point1 )
+
+
 
 class FyMapAction( FyAction ):
 
@@ -39,6 +51,8 @@ class FyMapAction( FyAction ):
 
     self._value = []
 
+    self._weigth = []
+
 #    self._previous = {}
 
   def scalarPerFiber( self, uniqueFiberId, coords, scalars ):
@@ -50,7 +64,7 @@ class FyMapAction( FyAction ):
 
     for currentCoords in coords:
         # convert to ijk
-        ijkCoords = [ int( a / b ) for a, b in zip( currentCoords, self._imageSpacing ) ]
+        ijkCoords = [  round(a / b, 6) for a, b in zip( currentCoords, self._imageSpacing) ]
         self._ijkcoordinates[uniqueFiberId].append( ijkCoords )
 
 
@@ -62,57 +76,134 @@ class FyMapAction( FyAction ):
     """
     """
 
-    current = [int( a / b ) for a, b in zip( [x, y, z], self._imageSpacing )]
+    current = [ round(a / b, 6)  for a, b in zip( [x, y, z], self._imageSpacing )]
 
     i = 0
     # find the index of the coordinate in the list
     for i in range( len( self._ijkcoordinates[uniqueFiberId] ) ):
         if self._ijkcoordinates[uniqueFiberId][i][0] == current[0] and self._ijkcoordinates[uniqueFiberId][i][1] == current[1] and self._ijkcoordinates[uniqueFiberId][i][2] == current[2]:
             break
+
+    # convert to integers
     index = i
 
     prevIndex = max( index - 1, 0 )
-    nextIndex = min( index + 1, len( self._ijkcoordinates ) - 1 )
+    nextIndex = min( index + 1, len( self._ijkcoordinates[uniqueFiberId] ) - 1 )
 
     lower = self._ijkcoordinates[uniqueFiberId][prevIndex]
     upper = self._ijkcoordinates[uniqueFiberId][nextIndex]
+#    lower = [0, 0, 0];
+#    upper = [0, 0, 0];
+#
+#    if(index>prevIndex):
+#        lower[0] = round(self._ijkcoordinates[uniqueFiberId][prevIndex][0]+ (self._ijkcoordinates[uniqueFiberId][index][0] - self._ijkcoordinates[uniqueFiberId][prevIndex][0])/2, 6)
+#        lower[1] = round(self._ijkcoordinates[uniqueFiberId][prevIndex][1]+ (self._ijkcoordinates[uniqueFiberId][index][1] - self._ijkcoordinates[uniqueFiberId][prevIndex][1])/2, 6)
+#        lower[2] = round(self._ijkcoordinates[uniqueFiberId][prevIndex][2]+ (self._ijkcoordinates[uniqueFiberId][index][2] - self._ijkcoordinates[uniqueFiberId][prevIndex][2])/2, 6)
+#    else:
+#        lower = self._ijkcoordinates[uniqueFiberId][index]
+#
+#    if(index<nextIndex):
+#        upper[0] = round(self._ijkcoordinates[uniqueFiberId][index][0]+ (self._ijkcoordinates[uniqueFiberId][nextIndex][0] - self._ijkcoordinates[uniqueFiberId][index][0])/2, 6)
+#        upper[1] = round(self._ijkcoordinates[uniqueFiberId][index][1]+ (self._ijkcoordinates[uniqueFiberId][nextIndex][1] - self._ijkcoordinates[uniqueFiberId][index][1])/2, 6)
+#        upper[2] = round(self._ijkcoordinates[uniqueFiberId][index][2]+ (self._ijkcoordinates[uniqueFiberId][nextIndex][2] - self._ijkcoordinates[uniqueFiberId][index][2])/2, 6)
+#    else:
+#        upper = self._ijkcoordinates[uniqueFiberId][index]
 
     values = []
+
     # list points
-    sampleBetween( lower, current, values )
-    sampleBetween( current, upper, values )
-
-    print 'values:'
-    print values
-
+    print current
+    values.append(current)
+    values.append(upper)
+#    if( index > prevIndex):
+#        sampleBetween( lower, current, values )
+#    if( index < nextIndex):
+#        sampleBetween( current, upper, values )
+#    sampleBetween( lower, current, values )
+#    sampleBetween( current, upper, values )
+##
+##    if len(values) == 0:
+##        values.append(current)
+#
+#    print 'values:'
+#    print values
+#    print(prevIndex, index, nextIndex)
     # average points
-    value = 0
+#
+#    values.append(current)
+    value = 0.0
+#    pos = 0
     for element in values[:]:
+        self._ijkcoordinates[uniqueFiberId][0]
         value += self._image[int( element[0] ), int( element[1] ), int( element[2] )]
+        print self._image[int( element[0] ), int( element[1] ), int( element[2] )]
 
     value /= len( values )
 
-    print 'value: '
-    print value
-    print '==============='
-    # return the interpolated value
-    self._value.append( value )
+#    #
+#    self._value.append( round(value, 6) )
+#    #
+##    l1 = numpy.sqrt( numpy.sum( ( current - lower ) ** 2 ) )
+##    l2 = numpy.sqrt( numpy.sum( ( upper - current ) ** 2 ) )
+#    current = [ round(a * b, 6)  for a, b in zip( current, self._imageSpacing )]
+#    lower = [ round(a * b, 6)  for a, b in zip( lower, self._imageSpacing )]
+#    upper = [ round(a * b, 6)  for a, b in zip( upper, self._imageSpacing )]
+#    l1= sqrt((current[0]-lower[0])*(current[0]-lower[0]) + (current[1]-lower[1])*(current[1]-lower[1]) + (current[2]-lower[2])*(current[2]-lower[2]))
+#    l2= sqrt((upper[0]-current[0])*(upper[0]-current[0]) + (upper[1]-current[1])*(upper[1]-current[1]) + (upper[2]-current[2])*(current[2]-current[2]))
+#    length = l1 +l2
+#    self._weigth.append(length)
 
-    return value
+    print 'value: '
+    print round(value, 6)
+    self._value.append( round(value, 6) )
+#    print 'length: '
+#    print length
+    print '==============='
+
+    # return the interpolated value
+    return round(value, 6)
 
   def validate( self, uniqueFiberId ):
       """
       """
-      value = 0
+#      value = 0.0
+#      weighttotal = 0
+#      count = 0
+#
+##      for element in self._value[:]:
+##          for elements in element:
+##              value += self._image[int( elements[0] ), int( elements[1] ), int( elements[2] )]
+##              count = count + 1
+##
+##      value /= count
+#
+#      for w in self._weigth[:]:
+#          weighttotal += w
+#
+#      for element in self._value[:]:
+#          value += element
+##          value += element*self._weigth[count]/weighttotal
+##          count += 1
+#
+#      value /= len(self._value)
 
-      for element in self._value[:]:
-        value += element
+      mean = 0.0;
+      lent = 0.0
 
-      value /= len( self._value )
+      for i in range( len( self._value[:] ) - 1 ):
+          current = self._ijkcoordinates[uniqueFiberId][i]
+          next = self._ijkcoordinates[uniqueFiberId][i+1]
+          sub_length = sqrt((next[0]-current[0])*(next[0]-current[0]) + (next[1]-current[1])*(next[1]-current[1]) + (next[2]-current[2])*(next[2]-current[2]))
+          mean += ((self._value[i] + self._value[i+1]) / 2 )* sub_length
+          lent += sub_length
+
+      mean /= lent
 
 
       print 'MEAN VALUE'
-      print value
+      print mean
+      print 'length:'
+      print lent
 
       return True
 #
