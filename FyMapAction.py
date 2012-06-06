@@ -68,7 +68,7 @@ class FyMapAction( FyAction ):
   def scalarPerCoordinate( self, uniqueFiberId, x, y, z ):
     """
     """
-    current = [ a/b for a, b in zip( [x, y, z], self._imageSpacing )]+
+    current = [ a/b for a, b in zip( [x, y, z], self._imageSpacing )]
     values = []
     values.append(current)
 
@@ -80,23 +80,21 @@ class FyMapAction( FyAction ):
   def validate( self, uniqueFiberId ):
       """
       """
-
-
-      mean = 0.0;
-      lent = 0.0
-
-      for i in range( len( self._value[:] ) - 1 ):
-              current = self._ijkcoordinates[uniqueFiberId][i]
-              next = self._ijkcoordinates[uniqueFiberId][i+1]
-              sub_length = sqrt((next[0]-current[0])*(next[0]-current[0]) + (next[1]-current[1])*(next[1]-current[1]) + (next[2]-current[2])*(next[2]-current[2]))
-              mean += ((self._value[i] + self._value[i+1]) / 2 )* sub_length
-              lent += sub_length
-
-      mean /= lent
-
-      print 'MEAN VALUE'
-      print mean
-      print 'length:'
-      print lent
+#      mean = 0.0;
+#      lent = 0.0
+#
+#      for i in range( len( self._value[:] ) - 1 ):
+#              current = self._ijkcoordinates[uniqueFiberId][i]
+#              next = self._ijkcoordinates[uniqueFiberId][i+1]
+#              sub_length = sqrt((next[0]-current[0])*(next[0]-current[0]) + (next[1]-current[1])*(next[1]-current[1]) + (next[2]-current[2])*(next[2]-current[2]))
+#              mean += ((self._value[i] + self._value[i+1]) / 2 )* sub_length
+#              lent += sub_length
+#
+#      mean /= lent
+#
+#      print 'MEAN VALUE'
+#      print mean
+#      print 'length:'
+#      print lent
 
       return True
