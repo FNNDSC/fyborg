@@ -50,14 +50,16 @@ class FyVertexMappingAction( FyMapAction ):
       # check which surface point is the closest
       # .. for the left hemisphere
       for index, l in enumerate( self._leftVerticesRAS ):
-        distance = numpy.linalg.norm( coords - l )
+        l = l.tolist()
+        distance = numpy.linalg.norm( currentCoords - [l[0][0], l[0][1], l[0][2]] )
         if distance < minDistanceLeft:
           # .. grab its' vertex index
           minVertexIndexLeft = index
 
       # .. and for the right hemisphere
       for index, l in enumerate( self._rightVerticesRAS ):
-        distance = numpy.linalg.norm( coords - l )
+        l = l.tolist()
+        distance = numpy.linalg.norm( currentCoords - [l[0][0], l[0][1], l[0][2]] )
         if distance < minDistanceRight:
           # .. grab its' vertex index
           minVertexIndexRight = index
