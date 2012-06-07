@@ -70,8 +70,7 @@ def fyborg( trkFile, outputTrkFile, actions, *args ):
   #
   # THREADED COMPONENT
   #
-#  numberOfThreads = multiprocessing.cpu_count()
-  numberOfThreads = 1
+  numberOfThreads = multiprocessing.cpu_count()
   c.info( 'Splitting master into ' + str( numberOfThreads ) + ' pieces..' )
   splittedOutputTracks = u.split_list( tracks[:], numberOfThreads )
 
@@ -132,20 +131,6 @@ def fyborg( trkFile, outputTrkFile, actions, *args ):
     outputTracks.extend( tTracks[0] )
 
   c.info( "Merging done!" )
-
-  # save the whole thing
-  print tracksHeader
-  print outputTracks[0][1]
-
-
-  value = 0
-  for element in outputTracks[0][1][:]:
-      value += element
-
-  value /= len(outputTracks[0][1])
-
-  print 'NEW'
-  print value
 
   io.saveTrk( outputTrkFile, outputTracks, tracksHeader, None, True )
 
