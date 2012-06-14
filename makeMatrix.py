@@ -63,6 +63,8 @@ def makeMatrix( trkFile1, outputDirectory ):
     except:
       continue
 
+    print 'found', firstLabel, lastLabel
+
     m_fn[fIndex, lIndex] += 1
     m_fa[fIndex, lIndex] += fa
     m_adc[fIndex, lIndex] += adc
@@ -90,7 +92,7 @@ def makeMatrix( trkFile1, outputDirectory ):
   m_e2[:] /= m_fn[:]
   m_e3[:] /= m_fn[:]
   m_adcinv[:] /= m_fn[:]
-  m_len[:] /= m_len[:]
+  m_len[:] /= m_fn[:]
   m_fa = numpy.nan_to_num( m_fa )
   m_e1 = numpy.nan_to_num( m_e1 )
   m_e2 = numpy.nan_to_num( m_e2 )
