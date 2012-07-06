@@ -29,15 +29,16 @@ class FyLabelMappingWithRadiusAction( FyMapAction ):
 
       # convert to ijk
       ijkCoords = [x / y for x, y in zip( currentCoords, self._imageSpacing )]
-      a, b, c = [int( max( 1, x ) ) for x in ijkCoords]
+      a, b, c = ijkCoords
       # create 3d sphere mask (from http://stackoverflow.com/questions/8647024/how-to-apply-a-disc-shaped-mask-to-a-numpy-array)
-      r = self._neighbors + 1
-      croppedImage = numpy.asarray( self._image[a - r:a + r, b - r:b + r, c - r:c + r] )
-      x, y, z = numpy.ogrid[0:2 * r, 0:2 * r, 0:2 * r]
-      mask = x * x + y * y + z * z <= self._neighbors * self._neighbors # 3d sphere mask
+      r = self._neighbors
+      croppedImage = numpy.asarray( testArr[a - r:a + r + 1, b - r:b + r + 1, c - r:c + r + 1] )
+      x, y, z = np.ogrid[0:2 * r + 1, 0:2 * r + 1, 0:2 * r + 1]
+      mask = ( x - r ) ** 2 + ( y - r ) ** 2 + ( z - r ) ** 2 <= r * r # 3d sphere mask
       # find the most frequent label
-      counts = numpy.bincount( numpy.asarray( croppedImage )[mask] )
-      mostFrequentLabel = numpy.argmax( counts )
+      from collections import Counter
+      counter = Counter( croppedImage[mask] )
+      mostFrequentLabel = counter.most_common( 1 )[0][0]
       labels.append( mostFrequentLabel )
 
     self._startLabels[uniqueFiberId] = [[first[0], first[1], first[2]], labels[0]]
