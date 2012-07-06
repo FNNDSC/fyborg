@@ -32,7 +32,7 @@ class FyLabelMappingWithRadiusAction( FyMapAction ):
       a, b, c = ijkCoords
       # create 3d sphere mask (from http://stackoverflow.com/questions/8647024/how-to-apply-a-disc-shaped-mask-to-a-numpy-array)
       r = self._neighbors
-      croppedImage = numpy.asarray( testArr[a - r:a + r + 1, b - r:b + r + 1, c - r:c + r + 1] )
+      croppedImage = numpy.asarray( self._image[a - r:a + r + 1, b - r:b + r + 1, c - r:c + r + 1] )
       x, y, z = np.ogrid[0:2 * r + 1, 0:2 * r + 1, 0:2 * r + 1]
       mask = ( x - r ) ** 2 + ( y - r ) ** 2 + ( z - r ) ** 2 <= r * r # 3d sphere mask
       # find the most frequent label
