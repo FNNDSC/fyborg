@@ -18,7 +18,7 @@ class FyMapAction( FyAction ):
   def scalarPerCoordinate( self, uniqueFiberId, x, y, z ):
     """
     """
-    current = [ round( a / b ) for a, b in zip( [x, y, z], self._imageSpacing )]
+    current = [ int( a / b ) for a, b in zip( [x, y, z], self._imageSpacing )]
 
     value = self._image[ current[0] , current[1] , current[2]]
 

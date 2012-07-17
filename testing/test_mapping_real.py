@@ -63,7 +63,7 @@ def validateMapping( volume, trkfile ):
 
     for i, p in enumerate( points ):
 
-      current_point = [ round( a / b ) for a, b in zip( [p[0], p[1], p[2]], spacing )]
+      current_point = [ int( a / b ) for a, b in zip( [p[0], p[1], p[2]], spacing )]
 
       real_scalar = volume[current_point[0], current_point[1], current_point[2]]
 
@@ -115,7 +115,7 @@ print Colors._CLEAR
 
 # temporary storage (always gets overwritten)
 volFile = 'testdata/dti_adc.nii'
-trkFile = 'testdata/streamline_small.trk'
+trkFile = 'testdata/streamline_small_2_2_2.trk'
 mappedTrkFile = '/chb/tmp/test456-fyborg.trk'
 kihosTrkFile = '/chb/tmp/test456-kiho.trk'
 
