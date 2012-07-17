@@ -127,7 +127,7 @@ def validateMapping( volume, trkfile ):
 
     for i, p in enumerate( points ):
 
-      current_point = p[0], p[1], p[2]
+      current_point = round( p[0] ), round( p[1] ), round( p[2] )
       real_scalar = volume[current_point]
 
       if type( scalars ) is types.NoneType:
@@ -163,11 +163,9 @@ def matlab():
 # TEST THE MAPPING
 # 
 # 1. Testcase
-#   - test the scalar mapping
+#   - test the scalar mapping of an artificial volume with an artificial trk file 
 #
-# 2. Testcase
-#   - test the neighborhood look-up mapping
-#
+
 
 print Colors.CYAN
 print "   ___         __"
