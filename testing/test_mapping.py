@@ -9,12 +9,14 @@ import types
 # imaging libs
 from nipy.core.image import image
 from nipy.io.api import load_image, save_image
+from _common.nibabelPATCHES.trackvis import empty_header as eH
 import numpy
 
 import random
 
 # the fabulous common lib
 from _common import FNNDSCFileIO as io
+
 
 # ..and fyborg, the majesty, himself
 import fyborg
@@ -90,9 +92,14 @@ def createSampleTrkFile( outputfile ):
                    random.randint( 0, SAMPLE_VOLUME_DIMENSION_Y - 1 ),
                    random.randint( 0, SAMPLE_VOLUME_DIMENSION_Z - 1 )]
 
+    # create an appropriate header
+    header = eH()
+    header['voxel_size'] = ( 1, 1, 1 )
+    header['dim'] = ( SAMPLE_VOLUME_DIMENSION_X, SAMPLE_VOLUME_DIMENSION_Y, SAMPLE_VOLUME_DIMENSION_Z )
+
     # store the trk file
     fibers.append( ( points, None, None ) )
-    io.saveTrk( outputfile, fibers, None, None, True )
+    io.saveTrk( outputfile, fibers, header, None, True )
 
   return numberOfFibers
 
