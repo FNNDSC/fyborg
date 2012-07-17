@@ -28,7 +28,7 @@ class FyLabelMappingWithRadiusAction( FyMapAction ):
       # do neighbor search
 
       # convert to ijk
-      ijkCoords = [x / y for x, y in zip( currentCoords, self._imageSpacing )]
+      ijkCoords = [round( x / y ) for x, y in zip( currentCoords, self._imageSpacing )]
       a, b, c = ijkCoords
       # create 3d sphere mask (from http://stackoverflow.com/questions/8647024/how-to-apply-a-disc-shaped-mask-to-a-numpy-array)
       r = self._neighbors
