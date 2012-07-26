@@ -6,7 +6,7 @@ from makeMatrix import *
 from FyAction import *
 from FyFilterCortexAction import *
 from FyFilterLengthAction import *
-from FyLabelMappingWithRadiusAction import *
 from FyLengthAction import *
 from FyMapAction import *
+from FyRadiusMapAction import *
 from FyVertexMappingAction import *

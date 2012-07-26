@@ -20,6 +20,6 @@ class FyMapAction( FyAction ):
     """
     current = [ int( a / b ) for a, b in zip( [x, y, z], self._imageSpacing )]
 
-    value = self._image[ current[0] , current[1] , current[2]]
+    value = self._image[ min( current[0], self._imageDimensions[0] - 1 ), min( current[1], self._imageDimensions[1] - 1 ) , min( current[2], self._imageDimensions[2] - 1 )]
 
     return value
