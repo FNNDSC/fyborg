@@ -1,11 +1,11 @@
 from FyAction import FyAction
-from FyLengthAction import FyLengthAction
 
-class FyFilterLengthAction( FyLengthAction ):
+class FyFilterLengthAction( FyAction ):
 
-  def __init__( self, lowerThreshold, upperThreshold ):
-    super( FyFilterLengthAction, self ).__init__()
+  def __init__( self, scalarIndex, lowerThreshold, upperThreshold ):
+    super( FyFilterLengthAction, self ).__init__( FyAction.NoScalar )
 
+    self.__scalarIndex = scalarIndex
     self.__lowerThreshold = lowerThreshold
     self.__upperThreshold = upperThreshold
     # buffer for the fiber length
@@ -14,12 +14,14 @@ class FyFilterLengthAction( FyLengthAction ):
   def scalarPerFiber( self, uniqueFiberId, coords, scalars ):
     '''
     '''
-    length = super( FyFilterLengthAction, self ).scalarPerFiber( uniqueFiberId, coords, scalars )
+    firstPointScalars = scalars[0]
+
+    length = firstPointScalars[self.__scalarIndex]
 
     # store the length
     self.__lengths[uniqueFiberId] = length
 
-    return length
+    return FyAction.NoScalar
 
   def validate( self, uniqueFiberId ):
     '''

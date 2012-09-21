@@ -6,21 +6,49 @@ import os
 import numpy
 import scipy.io as sio
 
-def makeMatrix( trkFile1, outputDirectory ):
+def makeMatrix( inputs, outputs, no_cortex ):
   '''
-  Make 1/ADC, ADC, FA, FiberNumber, FiberLength connectivity matrices.
+  Make 1/ADC, ADC, FA, FiberNumber, FiberLength, E1, E2, E3 connectivity matrices.
   '''
 
-  outputDirectory += os.sep
-
-  s = io.loadTrk( trkFile1 )
+  s = io.loadTrk( outputs['fibers_final'] )
   tracks = s[0]
   header = s[1]
 
   scalarNames = header['scalar_name'].tolist()
+  matrix = {}
+
+  # check if the segmentation is mapped
+  try:
+    scalarNames.index( 'segmentation' )
+  except:
+    c.error( Colors.RED )
+
+  for s in scalarNames:
+
+    if not s:
+      continue
+
+    print s
+
+  return
+
+
+
+  for i in inputs:
+
+    if i == 'fibers' or i == 'segmentation' or i == 'T1' or i == 'b0':
+      # we do not map these
+      continue
+
+  #for tCounter, t in enumerate( tracks ):
+
+
+
+
 
   try:
-    labelIndex = scalarNames.index( 'aparc_aseg_endlabel' )
+    labelIndex = scalarNames.index( 'segmentation' )
     adcIndex = scalarNames.index( 'adc' )
     faIndex = scalarNames.index( 'fa' )
     e1Index = scalarNames.index( 'e1' )
