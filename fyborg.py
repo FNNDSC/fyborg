@@ -7,6 +7,7 @@ from multiprocessing import Process
 import numpy
 
 from FyAction import FyAction
+import _common
 from _common import FNNDSCConsole as c
 from _common import FNNDSCFileIO as io
 from _common import FNNDSCUtil as u
